@@ -16,7 +16,7 @@ public class Spawner2 : MonoBehaviour
     [SerializeField]
     int timeDay = 25;
 Transform[] foods;
- Critts[] critters;
+ Critts[][] critters;
 GameObject[] Foods;
 
 public Transform plane;
@@ -28,20 +28,28 @@ private float Rx;
 private float Ry;
 private float Rz;
 public struct Critts {
-    public Critts(float speed, float nrg, Transform crittr){
+    public Critts(float speed, float nrg, float foodEaten, Transform crittr) {
         Speed = speed;
         Nrg = nrg;
         Crittr = crittr;
+        FoodEaten = foodEaten;
+
     }
+    public float FoodEaten {get;}
     public float Speed {get;}
     public float Nrg{ get; }
     public Transform Crittr{get;} 
 };  
+int DayTotal;
 //private bool dayOn;
 
     void Awake() {
         foods = new Transform[foodNumber];
-        critters = new Critts[critterNumber];
+        DayTotal = Data.DayNum;
+        critters = new Critts[Data.DayNum][];
+        for(int o = 0; o < Data.DayNum; o++) {
+            critters[o] = new Critts[critterNumber];
+        }
     }
 
 
@@ -54,9 +62,9 @@ for(int i = 0; i < foodNumber; i++){
         }
         for(int i = 0; i < critterNumber; i++){
            var randomPos = new Vector3(Random.Range(-(scale.localScale.x * 2f) + 1f, scale.localScale.x * 2f - 1f), plane.position.y + 1, Random.Range(-(scale.localScale.x * 2f) + 1f, scale.localScale.x * 2f - 1f));
-        critters[i] = new Critts(Random.Range(3,7), Random.Range(10,30), Instantiate(Critter));
-        critters[i].Crittr.transform.position = randomPos;
-        critters[i].Crittr.SetParent(transform, false);
+        critters[1][i] = new Critts(Random.Range(3,7), Random.Range(10,30),0, Instantiate(Critter));
+        critters[1][i].Crittr.transform.position = randomPos;
+        critters[1][i].Crittr.SetParent(transform, false);
         }
     }
     // Start is called before the first frame update
@@ -102,7 +110,12 @@ for(int i = 0; i < foodNumber; i++){
             if(Data.DayNum > 0) {
         roundTimer = roundTimer - Time.deltaTime;
         if (roundTimer <= 0) {
-        intitalSpawner();  
+      for(int i = 0; i < critterNumber; i++){
+           var randomPos = new Vector3(Random.Range(-(scale.localScale.x * 2f) + 1f, scale.localScale.x * 2f - 1f), plane.position.y + 1, Random.Range(-(scale.localScale.x * 2f) + 1f, scale.localScale.x * 2f - 1f));
+        critters[DayTotal - Data.DayNum][i] = new Critts(Random.Range(3,7), Random.Range(10,30),0, Instantiate(Critter));
+        critters[DayTotal - Data.DayNum][i].Crittr.transform.position = randomPos;
+        critters[DayTotal - Data.DayNum][i].Crittr.SetParent(transform, false);
+        }
         Data.DayNum -= 1;  
         CurrentTime = timeDay;
         CcScript.dayOn = true;
