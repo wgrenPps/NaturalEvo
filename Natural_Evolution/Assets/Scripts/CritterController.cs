@@ -29,7 +29,7 @@ int foodTg;
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
     if(CcScript.dayOn == true) {
         if (Foods[foodTg].activeSelf == true) {

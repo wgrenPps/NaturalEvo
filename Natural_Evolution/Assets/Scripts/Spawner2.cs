@@ -23,7 +23,7 @@ public Transform plane;
     public Transform scale;
 
 private float CurrentTime;
-private float roundTimer = 15;
+private float roundTimer;
 private float Rx;
 private float Ry;
 private float Rz;
@@ -50,6 +50,7 @@ int DayTotal;
         for(int o = 0; o < Data.DayNum; o++) {
             critters[o] = new Critts[critterNumber];
         }
+        roundTimer = timeDay;
     }
 
 
@@ -104,10 +105,13 @@ for(int i = 0; i < foodNumber; i++){
                 Foods[i].gameObject.SetActive(false);
             }
             for(int i = 0; i < critters.Length; i++) {
-                //Destroy(critters[i].gameObject);
+                Destroy(critters[DayTotal - Data.DayNum][i].Crittr.gameObject);
                 //critters[i].gameObject.SetActive(false);
             }
-            if(Data.DayNum > 0) {
+        }
+        }
+        void LateUpdate() {
+            if(DayTotal - Data.DayNum > 0) {
         roundTimer = roundTimer - Time.deltaTime;
         if (roundTimer <= 0) {
       for(int i = 0; i < critterNumber; i++){
@@ -119,14 +123,17 @@ for(int i = 0; i < foodNumber; i++){
         Data.DayNum -= 1;  
         CurrentTime = timeDay;
         CcScript.dayOn = true;
+        roundTimer = timeDay;
         }
     } else {
         Debug.Log("Finished");
     }
-}
+        }
+            
+
 
     }
 
 
 
-}
+
